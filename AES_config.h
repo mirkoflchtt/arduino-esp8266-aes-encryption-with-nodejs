@@ -14,7 +14,7 @@
   #include <stdlib.h>
   #include <string.h>
   #include <sys/time.h>
-  #include <unistd.h> 
+  #include <unistd.h>
 #else
   #include <Arduino.h>
 #endif
@@ -23,18 +23,21 @@
 #include <string.h>
 
 #if defined(__ARDUINO_X86__) || (defined (__linux) || defined (linux))
-  #undef PROGMEM
-  #define PROGMEM __attribute__(( section(".progmem.data") ))
-  #define pgm_read_byte(p) (*(p))
-  typedef unsigned char byte;
-  #define printf_P printf
-  #define PSTR(x) (x)
+	#undef PROGMEM
+	#define PROGMEM __attribute__(( section(".progmem.data") ))
+	#define pgm_read_byte(p) (*(p))
+	typedef unsigned char byte;
+	#define printf_P printf
+	#define PSTR(x) (x)
+#elif defined ( ESP8266 )
+	#include <pgmspace.h>
+	#define PSTR(x) (x)
 #else
-  #if (defined(__AVR__))
-    #include <avr\pgmspace.h>
-  #else
-    #include <pgmspace.h>
-  #endif
+    #if (defined(__AVR__))
+        #include <avr/pgmspace.h>
+    #else
+        #include <pgmspace.h>
+    #endif
 #endif
 
 #define N_ROW                   4

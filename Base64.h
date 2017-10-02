@@ -5,13 +5,6 @@
 #ifndef _BASE64_H
 #define _BASE64_H
 
-/* b64_alphabet:
- *     Description: Base64 alphabet table, a mapping between integers
- *           and base64 digits
- *    Notes: This is an extern here but is defined in Base64.c
- */
-extern const char b64_alphabet[];
-
 /* base64_encode:
  *    Description:
  *      Encode a string of characters as base64
@@ -58,7 +51,7 @@ int base64_decode(char *output, char *input, int inputLen);
  *    Requirements:
  *      None
  */
-int base64_enc_len(int inputLen);
+int base64_enc_len(const int inputLen);
 
 /* base64_dec_len:
  *    Description:
@@ -74,6 +67,6 @@ int base64_enc_len(int inputLen);
  *      1. input must not be null
  *      2. input must be greater than or equal to zero
  */
-int base64_dec_len(char *input, int inputLen);
+int base64_dec_len(char *input, const int inputLen);
 
 #endif // _BASE64_H

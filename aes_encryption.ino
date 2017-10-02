@@ -1,5 +1,5 @@
 #include "AES.h"
-#include "base64.h"
+#include "Base64.h"
 
 AES aes;
 
@@ -14,7 +14,29 @@ void gen_iv(byte  *iv) {
         iv[i]= (byte) getrnd();
     }
 }
-    
+
+void decrypt(const String& b64_msg, byte* key, byte* ivl)
+{
+  byte cipher[1024];
+  char out[1024];
+  char* plain = out;
+  int cipher_length;
+  
+  Serial.println("Now Decoding..");
+  Serial.print("Input: " + b64_msg + " Length: "); Serial.println(b64_msg.length());
+  
+  cipher_length = base64_decode((char*)cipher , (char*)b64_msg.c_str() , b64_msg.length() );
+  Serial.println("Cipher size: " + String(cipher_length) + " Data: " + String((char*)cipher));
+
+  //aes.do_aes_decrypt((byte*)cipher, cipher_length , (byte*)plain, key, 128, ivl);
+
+  //Serial.println("Plain size: " + String(aes.get_size()) + " Data: " + String(plain));
+/*
+  base64_decode( out , plain , strlen(plain) );
+
+  Serial.println("Message Decoded: " + String(out));*/
+}
+
 void setup() {
     Serial.begin(115200);
     Serial.println("\nBooting...");  
@@ -28,7 +50,7 @@ void setup() {
     byte key[] = { 0x2B, 0x7E, 0x15, 0x16, 0x28, 0xAE, 0xD2, 0xA6, 0xAB, 0xF7, 0x15, 0x88, 0x09, 0xCF, 0x4F, 0x3C };
     
     // The unitialized Initialization vector
-    byte my_iv[N_BLOCK] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    byte my_iv[N_BLOCK] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     
     // Our message to encrypt. Static for this example.
     String msg = "{\"data\":{\"value\":300}, \"SEQN\":700 , \"msg\":\"IT WORKS!!\" }";
@@ -51,7 +73,7 @@ void setup() {
     //Serial.println("Decoded: " + String(decoded));
     
     // Encrypt! With AES128, our key and IV, CBC and pkcs7 padding    
-    aes.do_aes_encrypt((byte *)b64data, b64len , cipher, key, 128, my_iv);
+    aes.do_aes_encrypt((byte *)b64data, b64len+1, cipher, key, 128, my_iv);
     
     Serial.println("Encryption done!");
     
@@ -61,6 +83,8 @@ void setup() {
     Serial.println ("Encrypted data in base64: " + String(b64data) );
       
     Serial.println("Done...");
+
+    //decrypt(String(b64data), key, my_iv);
 }
 
 void loop() {
